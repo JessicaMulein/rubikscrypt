@@ -27,33 +27,21 @@ export class Rubik {
         if (z < 0 || z >= this.cubeSize) throw new Error("Invalid z coordinate");
         this.data[x + this.cubeSize * (y + this.cubeSize * z)] = value;
     }
-    public rotateX(x: number): void {
-        if (x < 0 || x >= this.cubeSize) throw new Error("Invalid x coordinate");
-        const size = this.cubeSize;
-        const data = this.data;
-        const temp = Buffer.alloc(size * size);
-        for (let y = 0; y < size; y++) {
-            for (let z = 0; z < size; z++) {
-                temp[y + size * z] = data[x + size * (y + size * z)];
-            }
-        }
-        for (let y = 0; y < size; y++) {
-            for (let z = 0; z < size; z++) {
-                data[x + size * (y + size * z)] = temp[z + size * (size - y - 1)];
-            }
-        }
-    }
-    public rotateXN(x: number, n: number): void {
+    public rotateX(x: number, n: number = 1): void {
         if (n < 1) throw new Error("Invalid rotation count");
         if (x < 0 || x >= this.cubeSize) throw new Error("Invalid x coordinate");
+    
         const size = this.cubeSize;
         const data = this.data;
         const temp = Buffer.alloc(size * size);
         const rotations = ((n % 4) + 4) % 4; // ensures the result is always between 0 and 3
     
+        // Loop through each cell in the slice at x
         for (let y = 0; y < size; y++) {
             for (let z = 0; z < size; z++) {
                 let newY, newZ;
+    
+                // Determine the new coordinates after rotation
                 switch (rotations) {
                     case 1: // 90 degrees counterclockwise
                         newY = z;
@@ -72,33 +60,20 @@ export class Rubik {
                         newZ = z;
                         break;
                 }
+    
+                // Copy the cell to the temporary buffer
                 temp[newY + size * newZ] = data[x + size * (y + size * z)];
             }
         }
     
+        // Copy the rotated data from the temporary buffer back to the cube
         for (let y = 0; y < size; y++) {
             for (let z = 0; z < size; z++) {
                 data[x + size * (y + size * z)] = temp[y + size * z];
             }
         }
-    }
-    public rotateY(y: number): void {
-        if (y < 0 || y >= this.cubeSize) throw new Error("Invalid y coordinate");
-        const size = this.cubeSize;
-        const data = this.data;
-        const temp = Buffer.alloc(size * size);
-        for (let x = 0; x < size; x++) {
-            for (let z = 0; z < size; z++) {
-                temp[x + size * z] = data[x + size * (y + size * z)];
-            }
-        }
-        for (let x = 0; x < size; x++) {
-            for (let z = 0; z < size; z++) {
-                data[x + size * (y + size * z)] = temp[z + size * (size - x - 1)];
-            }
-        }
-    }
-    public rotateYN(y: number, n: number): void {
+    }    
+    public rotateY(y: number, n: number = 1): void {
         if (n < 1) throw new Error("Invalid rotation count");
         if (y < 0 || y >= this.cubeSize) throw new Error("Invalid y coordinate");
         const size = this.cubeSize;
@@ -137,23 +112,7 @@ export class Rubik {
             }
         }
     }    
-    public rotateZ(z: number): void {
-        if (z < 0 || z >= this.cubeSize) throw new Error("Invalid z coordinate");
-        const size = this.cubeSize;
-        const data = this.data;
-        const temp = Buffer.alloc(size * size);
-        for (let x = 0; x < size; x++) {
-            for (let y = 0; y < size; y++) {
-                temp[x + size * y] = data[x + size * (y + size * z)];
-            }
-        }
-        for (let x = 0; x < size; x++) {
-            for (let y = 0; y < size; y++) {
-                data[x + size * (y + size * z)] = temp[y + size * (size - x - 1)];
-            }
-        }
-    }
-    public rotateZN(z: number, n: number): void {
+    public rotateZ(z: number, n: number = 1): void {
         if (n < 1) throw new Error("Invalid rotation count");
         if (z < 0 || z >= this.cubeSize) throw new Error("Invalid z coordinate");
         const size = this.cubeSize;
