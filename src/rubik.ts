@@ -21,7 +21,7 @@ export class Rubik {
         return this.data[x + this.cubeSize * (y + this.cubeSize * z)];
     }
     public set(x: number, y: number, z: number, value: number): void {
-        if (value < 0 || value >= this.cubeSize) throw new Error("Invalid value");
+        if (value < 0 || value > 255) throw new Error("Invalid value");
         if (x < 0 || x >= this.cubeSize) throw new Error("Invalid x coordinate");
         if (y < 0 || y >= this.cubeSize) throw new Error("Invalid y coordinate");
         if (z < 0 || z >= this.cubeSize) throw new Error("Invalid z coordinate");
@@ -44,6 +44,7 @@ export class Rubik {
         }
     }
     public rotateXN(x: number, n: number): void {
+        if (n < 1) throw new Error("Invalid rotation count");
         if (x < 0 || x >= this.cubeSize) throw new Error("Invalid x coordinate");
         const size = this.cubeSize;
         const data = this.data;
@@ -98,6 +99,7 @@ export class Rubik {
         }
     }
     public rotateYN(y: number, n: number): void {
+        if (n < 1) throw new Error("Invalid rotation count");
         if (y < 0 || y >= this.cubeSize) throw new Error("Invalid y coordinate");
         const size = this.cubeSize;
         const data = this.data;
@@ -152,6 +154,7 @@ export class Rubik {
         }
     }
     public rotateZN(z: number, n: number): void {
+        if (n < 1) throw new Error("Invalid rotation count");
         if (z < 0 || z >= this.cubeSize) throw new Error("Invalid z coordinate");
         const size = this.cubeSize;
         const data = this.data;

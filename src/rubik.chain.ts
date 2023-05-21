@@ -27,9 +27,10 @@ export class RubiksChain {
         return new RubiksChain(size, rubiks);
     }
     public rotateX(x: number, n: number): void {
+        if (n < 1) throw new Error("Invalid rotation count");
         if (x < 0 || x >= this.cubeSize) throw new Error("Invalid x coordinate");
         for (const rubik of this.rubiks) {
-            if (n != 0) {
+            if (n != 1) {
                 rubik.rotateXN(x, n);
             } else {
                 rubik.rotateX(x);
@@ -37,9 +38,10 @@ export class RubiksChain {
         }
     }
     public rotateY(y: number, n: number): void {
+        if (n < 1) throw new Error("Invalid rotation count");
         if (y < 0 || y >= this.cubeSize) throw new Error("Invalid y coordinate");
         for (const rubik of this.rubiks) {
-            if(n != 0) {
+            if(n != 1) {
                 rubik.rotateYN(y, n);
             } else {
                 rubik.rotateY(y);
@@ -47,9 +49,10 @@ export class RubiksChain {
         }
     }
     public rotateZ(z: number, n: number): void {
+        if (n < 1) throw new Error("Invalid rotation count");
         if (z < 0 || z >= this.cubeSize) throw new Error("Invalid z coordinate");
         for (const rubik of this.rubiks) {
-            if (n != 0) {
+            if (n != 1) {
                 rubik.rotateZN(z, n);
             } else {
                 rubik.rotateZ(z);
