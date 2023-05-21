@@ -1,11 +1,29 @@
 import { Rubik } from './rubik';
 import crypto from 'crypto';
 
+function buildRotatedCube(size: number): Buffer {
+    const data = Buffer.alloc(size * size * size);
+    // fill the cube
+    for (let i = 0; i < size * size * size; i++) {
+        data.writeUInt8(i % 256, i);
+    }
+    // now rotate the cube in the X direction
+    const rotated = Buffer.alloc(size * size * size);
+    for (let x = 0; x < size; x++) {
+        for (let y = 0; y < size; y++) {
+            for (let z = 0; z < size; z++) {
+                rotated[x + y * size + z * size * size] = data[x * size + y + z * size * size];
+            }
+        }
+    }
+    return rotated;
+}
+
 describe('Rubik', () => {
-    const size = 3;
-    const data = Buffer.alloc(size);
+    const size = 4;
+    const data = Buffer.alloc(size*size*size);
     for (let i = 0; i < size; i++) {
-        data[i] = i % 256
+        data.writeUInt8(i % 256, i);
     }
     const rubik = new Rubik(size, data);
 
@@ -35,10 +53,7 @@ describe('Rubik', () => {
     test('rotateX', () => {
         const originalData = Buffer.from(rubik.data);
         rubik.rotateX(0);
-        rubik.rotateX(0);
-        rubik.rotateX(0);
-        rubik.rotateX(0);
-        expect(rubik.data).toEqual(originalData);
+        expect(rubik.data).toEqual(buildRotatedCube(rubik.cubeSize));
         expect(() => rubik.rotateX(size,1)).toThrow('Invalid x coordinate');
     });
 

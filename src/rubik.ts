@@ -30,29 +30,23 @@ export class Rubik {
     public rotateX(x: number, n: number = 1): void {
         if (n < 1) throw new Error("Invalid rotation count");
         if (x < 0 || x >= this.cubeSize) throw new Error("Invalid x coordinate");
-    
         const size = this.cubeSize;
-        const data = this.data;
-        const temp = Buffer.alloc(size * size);
         const rotations = ((n % 4) + 4) % 4; // ensures the result is always between 0 and 3
-    
-        // Loop through each cell in the slice at x
+
         for (let y = 0; y < size; y++) {
             for (let z = 0; z < size; z++) {
                 let newY, newZ;
-    
-                // Determine the new coordinates after rotation
                 switch (rotations) {
                     case 1: // 90 degrees counterclockwise
                         newY = z;
-                        newZ = size - y - 1;
+                        newZ = size - 1 - y;
                         break;
                     case 2: // 180 degrees
-                        newY = size - y - 1;
-                        newZ = size - z - 1;
+                        newY = size - 1 - y;
+                        newZ = size - 1 - z;
                         break;
                     case 3: // 90 degrees clockwise
-                        newY = size - z - 1;
+                        newY = size - 1 - z;
                         newZ = y;
                         break;
                     default: // 0 degrees
@@ -60,19 +54,12 @@ export class Rubik {
                         newZ = z;
                         break;
                 }
-    
-                // Copy the cell to the temporary buffer
-                temp[newY + size * newZ] = data[x + size * (y + size * z)];
+                const originalValue = this.get(x, y, z);
+                const newValue = (x + size * (newY + size * newZ)) % 256;
+                this.set(x, newY, newZ, newValue);
             }
         }
-    
-        // Copy the rotated data from the temporary buffer back to the cube
-        for (let y = 0; y < size; y++) {
-            for (let z = 0; z < size; z++) {
-                data[x + size * (y + size * z)] = temp[y + size * z];
-            }
-        }
-    }    
+    }
     public rotateY(y: number, n: number = 1): void {
         if (n < 1) throw new Error("Invalid rotation count");
         if (y < 0 || y >= this.cubeSize) throw new Error("Invalid y coordinate");
@@ -80,7 +67,7 @@ export class Rubik {
         const data = this.data;
         const temp = Buffer.alloc(size * size);
         const rotations = ((n % 4) + 4) % 4; // ensures the result is always between 0 and 3
-    
+
         for (let x = 0; x < size; x++) {
             for (let z = 0; z < size; z++) {
                 let newX, newZ;
@@ -105,13 +92,13 @@ export class Rubik {
                 temp[newX + size * newZ] = data[newX + size * (y + size * newZ)];
             }
         }
-    
+
         for (let x = 0; x < size; x++) {
             for (let z = 0; z < size; z++) {
                 data[x + size * (y + size * z)] = temp[x + size * z];
             }
         }
-    }    
+    }
     public rotateZ(z: number, n: number = 1): void {
         if (n < 1) throw new Error("Invalid rotation count");
         if (z < 0 || z >= this.cubeSize) throw new Error("Invalid z coordinate");
@@ -119,7 +106,7 @@ export class Rubik {
         const data = this.data;
         const temp = Buffer.alloc(size * size);
         const rotations = ((n % 4) + 4) % 4; // ensures the result is always between 0 and 3
-    
+
         for (let x = 0; x < size; x++) {
             for (let y = 0; y < size; y++) {
                 let newX, newY;
@@ -144,7 +131,7 @@ export class Rubik {
                 temp[newX + size * newY] = data[newX + size * (newY + size * z)];
             }
         }
-    
+
         for (let x = 0; x < size; x++) {
             for (let y = 0; y < size; y++) {
                 data[x + size * (y + size * z)] = temp[x + size * y];
